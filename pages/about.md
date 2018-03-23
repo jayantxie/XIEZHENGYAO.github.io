@@ -1,18 +1,18 @@
 ---
 layout: page
 title: About
-description: 打码改变世界
-keywords: Zhuang Ma, 马壮
+description: 美若黎明
+keywords: Jayant Xie, 谢正尧
 comments: true
 menu: 关于
 permalink: /about/
 ---
 
-我是马壮，码而生，码而立。
+Jayant Xie，浙江大学在读。
 
-仰慕「优雅编码的艺术」。
+爱技术，爱摄影。
 
-坚信熟能生巧，努力改变人生。
+这里是我生活的另一面。
 
 ## 联系
 

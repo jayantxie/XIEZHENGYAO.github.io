@@ -1,19 +1,13 @@
-- name: Software Engineer Keywords
+- name: Back End Developer
   keywords:
-      - Java
-      - C++
-      - Python
-      - Design Patterns
+      - Java EE
+      - Redis
+      - Dubbo
+      - Zookeeper
+      - Netflix
 
-- name: Mobile Developer Keywords
+- name: Blockchain Developer
   keywords:
-      - Android
-      - Reverse Engineering
-
-- name: Windows Developer Keywords
-  keywords:
-      - Win32 SDK
-      - DuiLib
-      - WTL
-      - COM
-      - WinDbg
+      - Ethereum
+      - Hyperledger Fabric
+      - Smart contract
