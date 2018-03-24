@@ -8,7 +8,7 @@ menu: 维基
 permalink: /wiki/
 ---
 
-> 记多少命令和快捷键会让脑袋爆炸呢？
+> 这个世界将按照我们的意愿重塑。
 
 <ul class="listing">
 {% for wiki in site.wiki %}
