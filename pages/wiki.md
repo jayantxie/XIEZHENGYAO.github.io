@@ -8,7 +8,7 @@ menu: 维基
 permalink: /wiki/
 ---
 
-> 这个世界将按照我们的意愿重塑。
+> 认识世界，认识宇宙，认识自我。
 
 <ul class="listing">
 {% for wiki in site.wiki %}

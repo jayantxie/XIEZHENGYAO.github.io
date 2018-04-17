@@ -5,3 +5,5 @@ _site/
 *~
 .DS_Store
 Gemfile.lock
+/_posts/2018-03-26-IPFS.md
+/_posts/2018-03-27-Rust-beginning.md

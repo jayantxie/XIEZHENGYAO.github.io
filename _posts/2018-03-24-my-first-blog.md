@@ -18,7 +18,7 @@ keywords: First Blog, Future, Apology
 
 ## 规划
 
-更博频率至少一周一篇吧，立此flag不倒。另，勿忘初心！
+将写博客当做一个生活习惯，更博频率大于2篇/月，高质量最重要。立此FLAG不倒！
 
 
   [1]: http://mazhuang.org/
