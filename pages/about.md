@@ -8,7 +8,7 @@ menu: 关于
 permalink: /about/
 ---
 
-Jayant，从事Java后端与中间件开发方向，热衷研究源码，关注区块链技术。
+Jayant，从事Java后端与中间件开发方向，关注区块链技术。
 
 ## 联系
 
