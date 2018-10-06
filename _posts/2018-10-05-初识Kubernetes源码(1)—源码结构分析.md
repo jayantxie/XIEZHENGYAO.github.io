@@ -6,16 +6,17 @@ description: 初识Kubernetes源码(1)—源码结构分析
 keywords: Kubernetes, docker
 ---
 
-出于工作需要，在不久前刚刚接触Kubernetes，不得不说这对我是一个非常大的挑战。一来博主此前较少接触golang开发，二来也对基于golang的K8s和docker等容器技术了解甚浅。两个月的工作过程中，只有大约一周左右的时间在初步了解K8s的架构，以及和公司自身的容器平台之间的关联逻辑，而后的大部分工作都游离在表面，知其然而不知其所以然。这样的状态，身为一个有点自尊心的程序员是无法忍受的，因此，我下定决心在未来的几个月内深挖K8s的源码实现，本篇将拉开序幕。
+&nbsp;&nbsp;出于工作需要，在不久前刚刚接触Kubernetes，不得不说这对我是一个非常大的挑战。一来博主此前较少接触golang开发，二来也对基于golang的K8s和docker等容器技术了解甚浅。  
+&nbsp;&nbsp;两个月的工作过程中，只有大约一周左右的时间在初步了解K8s的架构，以及和公司自身的容器平台之间的关联逻辑，而后的大部分工作都游离在表面，知其然而不知其所以然。这样的状态，身为一个有点自尊心的程序员是无法忍受的，因此，我下定决心在未来的几个月内深挖K8s的源码实现，本篇将拉开序幕。
 
 ## 从目录讲起
 说到源码，必须先上GitHub链接，找到golang工程目录，git clone下方地址：  
-https://github.com/kubernetes/kubernetes.git  
+[https://github.com/kubernetes/kubernetes.git](https://github.com/kubernetes/kubernetes.git)  
 ![](/images/kubernetes/source_code_struct.png)  
 *kubernetes源码目录结构*  
 其中，  
 |目录名 | 说明 |
-|------| -----|
+| ------ | ----- |
 |`api` | 输出接口文档用，基本是json源码 |
 |`build`| 存放构建脚本 |
 |`cmd` | 所有的二进制可执行文件入口代码，即各种命令的接口代码 |
@@ -52,7 +53,7 @@ K8s集群节点分为master和node节点，其整体架构图如下：
 > 从上图中，我们总结出K8s在master节点上有如下组件：  
 **API Server**：资源操作入口，提供RESTFul接口供外部客户或内部组件调用，封装后端实现，保证集群操作的安全；  
 **Controller Manager**：内部管理控制中心，主要分为Endpoint Controller和Replication Controller。前者定期关联service和pod(关联信息由endpoint对象维护)，后者控制pod数总与其定义的pod数保持一致；  
-**Scheduler**：集群分发调度器，负责对pod即将部署的node打分，同时检测pod和node信息，部署pod之后将pod与node关联信息写回API Server；
+**Scheduler**：集群分发调度器，负责对pod即将部署的node打分，同时检测pod和node信息，部署pod之后将pod与node关联信息写回API Server；  
 **Kubectl**：集群管理命令行工具集，通过客户端的kubectl命令集操作，API Server响应对应的命令结果，从而达到对kubernetes集群的管理。
 
 
