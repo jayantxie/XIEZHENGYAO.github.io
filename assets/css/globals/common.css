@@ -407,7 +407,11 @@
 }
 
 .markdown-body table {
-    padding: 0;
+    display: block;
+    width: 100%;
+    overflow: auto;
+    word-break: normal;
+    word-break: keep-all
 }
 
 .markdown-body table td,.markdown-body table th {
