@@ -81,8 +81,11 @@ func main() {
 
 
 ### Golang实现TCP连接池的过程
+整体流程：
 ![](/images/httpclient/整体流程.png)
+TCP连接池：
 ![](/images/httpclient/连接池.png)
+调用连接处理Http请求：
 ![](/images/httpclient/DoRequest.png)
 
 ### Transport参数优化
@@ -91,7 +94,7 @@ func main() {
 
 > QPS < (idle conns size) * (1000(ms) / 请求的响应时间(ms))
 
-
+在
 
 
 
