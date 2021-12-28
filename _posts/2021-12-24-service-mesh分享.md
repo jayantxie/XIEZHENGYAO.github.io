@@ -100,7 +100,7 @@ istio的配置下发是无法做到按版本控制和按实例灰度发布的，
 1. 不同服务的配置隔离；
 3. 支持灰度配置下发和回滚。
 
-![](/iamges/kubernetes/WechatIMG505.png)
+![](/images/kubernetes/WechatIMG505.png)
 
 上图描述了service mesh配置在etcd中的组织形式，以及版本发布的实现机制。配置存储以服务为粒度，所以以服务为前缀的key存储了这个服务所用到的所有mesh配置，包括监听的listener、virtual_service、destination_rule。为了支持多版本并行发布（应对后续自动化运维的自动发布需求），设计了MVCC的键，存储namespace的最新发布版本id和正在发布中的版本id。创建版本时，新增一个版本的key记录这个版本的所有变更记录。选择节点发布时，更新节点的期望版本，pilot watch到节点期望变更时，自动同步最新变更的版本配置下发到端。灰度直至所有节点更新到最新版本后，自动合并版本的变更记录到namespace下的配置中。
 
