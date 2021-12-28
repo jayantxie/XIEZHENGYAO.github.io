@@ -38,6 +38,8 @@
 
 在istio的实现里，Sidecar CRD定义了一个微服务所依赖的服务项。istio查找K8s的service或service entry来确定这些服务的端口号，并按端口聚合成xDS配置。配合iptables重定向，访问特定端口的流量就能重定向到envoy。
 
+![](/images/kubernetes/WechatIMG507.png)
+
 如果流量劫持采用istio社区推荐的iptables方案，那就意味着所有进出pod的流量都会被劫持，且受到iptables性能的约束。访问prometheus、pg、redis的流量也会因为增加一跳带来不必要的延迟开销。最关键的，一旦sidecar故障，想要修改iptables规则禁用流量劫持是非常困难的。因此，我们排除了iptables透明劫持方案。
 
 不用重定向，那就只能在服务发现处下手了。我们想到可以利用注册中心下发回环ip+sidecar outbound端口来劫持流量。但是这样一来，访问服务的目标端口信息就不存在了，也就无法再基于istio的xDS配置将流量转发出去。
@@ -93,7 +95,9 @@
 ![](/images/kubernetes/WechatIMG503.png)
 
 ### Sidecar无损升级
+数据面热升级是基于阿里开源Open kruise的Sidecarset。在升级过程中，新的Mosn进程会启动unix socket接收老Mosn进程发送的listener fd，然后老的mosn进程再关闭listener，老mosn现存的连接需要平滑关闭，方法是回调http2的goaway或http的close connection函数，让client端触发连接重建。下图展示了关键过程。
 
+![](/images/kubernetes/WechatIMG506.png)
 ## 配置版本控制和自动加载方案
 istio的配置下发是无法做到按版本控制和按实例灰度发布的，而实际上在生产环境的改动影响面是难以事先估量的，如果不加以灰度控制和回滚，一旦配置错误可能导致全局故障，为此我们的控制面实现了以下特性：
 
@@ -104,9 +108,9 @@ istio的配置下发是无法做到按版本控制和按实例灰度发布的，
 
 上图描述了service mesh配置在etcd中的组织形式，以及版本发布的实现机制。配置存储以服务为粒度，所以以服务为前缀的key存储了这个服务所用到的所有mesh配置，包括监听的listener、virtual_service、destination_rule。为了支持多版本并行发布（应对后续自动化运维的自动发布需求），设计了MVCC的键，存储namespace的最新发布版本id和正在发布中的版本id。创建版本时，新增一个版本的key记录这个版本的所有变更记录。选择节点发布时，更新节点的期望版本，pilot watch到节点期望变更时，自动同步最新变更的版本配置下发到端。灰度直至所有节点更新到最新版本后，自动合并版本的变更记录到namespace下的配置中。
 
-istio通过sidecar CRD定义了一个服务依赖的服务列表，而在实际生产环境，业务以来的服务项特别多，要每次新增依赖都手动添加配置，对业务而言成本是比较高的。所以我们设计了自动配置发布功能。在服务A访问服务B时，如果sidecar发现没有服务B的路由信息，会使用passthrough cluster透传请求到服务B的实例上。但passthrough的方式不能长久使用，否则不利于流量治理和监控。因此，流量经过passthrough cluster时，sidecar会触发控制面api回调，异步调用控制面接口创建依赖配置并下发。基于这个机制，可以实现业务无需关注服务依赖即可自动添加配置，大大降低了研发接入和使用成本。
-
 ![](/images/kubernetes/WechatIMG504.png)
+
+istio通过sidecar CRD定义了一个服务依赖的服务列表，而在实际生产环境，业务以来的服务项特别多，要每次新增依赖都手动添加配置，对业务而言成本是比较高的。所以我们设计了自动配置发布功能。在服务A访问服务B时，如果sidecar发现没有服务B的路由信息，会使用passthrough cluster透传请求到服务B的实例上。但passthrough的方式不能长久使用，否则不利于流量治理和监控。因此，流量经过passthrough cluster时，sidecar会触发控制面api回调，异步调用控制面接口创建依赖配置并下发。基于这个机制，可以实现业务无需关注服务依赖即可自动添加配置，大大降低了研发接入和使用成本。
 
 # 总结
 从18年开始探探启动了微服务的拆分，到如今service mesh架构落地，是公司向云原生方向迈进的又一个里程碑。未来，我们将基于K8s和service mesh平台，将更多的分布式能力融入底层基础设施，为各业务线提供低侵入、低成本、标准化的服务治理解决方案。
